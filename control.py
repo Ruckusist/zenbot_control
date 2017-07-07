@@ -7,6 +7,7 @@ for variable control and management.
 
 import os
 import time
+import datetime
 import getpass
 import pexpect as pex
 
@@ -15,7 +16,7 @@ def main():
         pid = os.getpid()
         username = getpass.getuser()
         os.system('clear')
-        print("Process running on PID: {}".format(pid))
+        print("#\t| Zenbot Controller | PID: {} | {}".format(pid, datetime.datetime.now()))
         program_path = 'zenbot sim '
         flags = '--period=2d'
         conf = "--conf=/home/{}/zenbot_control/conf.js ".format(username)
@@ -28,7 +29,7 @@ def main():
         buffed = []
         for line in pgm:
             if caught:
-                print(line)
+                # print(line)
                 if not line == '':
                     buffed.append(line)
             else:
@@ -37,8 +38,8 @@ def main():
                     caught = True
 
         for i in buffed:
-            print(i)
-        
+            print("# {}".format(i))
+
         print("All tests Successfully completed.")
 
     except KeyboardInterrupt:
