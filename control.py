@@ -6,22 +6,39 @@ for variable control and management.
 """
 
 import os
-import sys
+import time
+import getpass
 import pexpect as pex
 
 def main():
-    # TODO: this is still missing a command line arg parser!
     try:
         pid = os.getpid()
+        username = getpass.getuser()
         os.system('clear')
         print("Process running on PID: {}".format(pid))
-        print("Running pexpect Tests...")
-        flags = ''
-        pgm = pex.spawnu('zenbot {}'.format(flags))
+        program_path = 'zenbot sim '
+        flags = '--period=2d'
+        conf = "--conf=/home/{}/zenbot_control/conf.js ".format(username)
+        full_spawn = program_path + conf + flags
+        print("Running this command: {}".format(full_spawn))
+        time.sleep(.5)
+        pgm = pex.spawnu(full_spawn)
+        catch = '{'
+        caught = False
+        buffed = []
         for line in pgm:
-            if not line == '':
+            if caught:
                 print(line)
+                if not line == '':
+                    buffed.append(line)
+            else:
+                if catch in line:
+                    print("caught: {}".format(line))
+                    caught = True
 
+        for i in buffed:
+            print(i)
+        
         print("All tests Successfully completed.")
 
     except KeyboardInterrupt:
